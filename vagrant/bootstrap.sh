@@ -53,8 +53,9 @@ apt-get update
   apt-get -y install mysql-server
   apt-get -y install php7.1-mysql
   mysql -uroot -p$PASSWORD -e "CREATE DATABASE $DBNAME"
-  mysql -uroot -p$PASSWORD -e "grant usage on *.* to $DBUSER identified by '$DBPASSWD'"
-  mysql -uroot -p$PASSWORD -e "grant all privileges on $DBNAME.* to $DBUSER"
+  mysql -uroot -p$PASSWORD -e "GRANT USAGE ON *.* to $DBUSER IDENTIFIED BY '$DBPASSWD'"
+  mysql -uroot -p$PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO $DBUSER"
+  mysql -uroot -p$PASSWORD -e "FLUSH PRIVILEGES"
 
 	service mysql restart
 

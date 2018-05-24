@@ -11,8 +11,8 @@ class ExampleController
         $this->example = $example;
     }
 
-    public function index($userId)
+    public function index($customerId)
     {
-        return $this->example->getUser($userId);
+        return $this->example->getCustomer($customerId);
     }
 }

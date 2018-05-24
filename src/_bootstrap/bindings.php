@@ -21,6 +21,7 @@ $this->ioc->bind('ExampleController', 'Acme\Controllers\ExampleController');
 
 // Eloquent
 $this->ioc->bind('Acme\Repositories\Homestead\UsersRepositoryInterface',  'Acme\Repositories\Homestead\EloquentUsersRepository');
+$this->ioc->bind('Acme\Repositories\Homestead\CustomersRepositoryInterface',  'Acme\Repositories\Homestead\EloquentCustomersRepository');
 
 /*
  * Some additional classes to run through PHPUnit

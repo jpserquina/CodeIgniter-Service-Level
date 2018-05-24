@@ -1,7 +1,7 @@
 <?php namespace Acme\Services;
 
 use Acme\Services\Cookie;
-use Acme\Repositories\Homestead\UsersRepositoryInterface as User;
+use Acme\Repositories\Homestead\CustomersRepositoryInterface as Customer;
 
 /*
  * This is obviously a highly oversimplified example. All we are doing here
@@ -10,19 +10,19 @@ use Acme\Repositories\Homestead\UsersRepositoryInterface as User;
  */
 class Example
 {
-    protected $user;
+    protected $customer;
 
-    public function __construct(User $user)
+    public function __construct(Customer $customer)
     {
-        $this->user = $user;
+        $this->customer = $customer;
     }
 
-    public function getUser($id)
+    public function getCustomer($id)
     {
 
-        $user = $this->user->getById($id);
+        $customer = $this->customer->getById($id);
 
-        return $user;
+        return $customer;
     }
 
 }
