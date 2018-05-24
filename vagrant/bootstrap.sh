@@ -28,9 +28,9 @@ apt-get update
   curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Add composer bin path to globals
-  echo '' >> /home/vagrant/.bashrc
-  echo 'export PATH="$HOME/.config/composer/vendor/bin:$PATH"' >> /home/vagrant/.bashrc
-  echo 'cd /var/www/app' >> /home/vagrant/.bashrc
+    echo '' >> /home/vagrant/.bashrc
+    echo 'export PATH="$HOME/.config/composer/vendor/bin:$PATH"' >> /home/vagrant/.bashrc
+    echo 'cd /var/www/app' >> /home/vagrant/.bashrc
 
 # Symlink /app with /var/www dir
 	ln -fs /app /var/www/app
@@ -43,30 +43,36 @@ apt-get update
 
 # install mysql and give password to installer
   # Use single quotes instead of double quotes to make it work with special-character passwords
-  PASSWORD='root'
-  DBHOST=localhost
-  DBNAME=app
-  DBUSER=user
-  DBPASSWD=user
-  debconf-set-selections <<< "mysql-server mysql-server/root_password password $PASSWORD"
-  debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $PASSWORD"
-  apt-get -y install mysql-server
-  apt-get -y install php7.1-mysql
-  mysql -uroot -p$PASSWORD -e "CREATE DATABASE $DBNAME"
-  mysql -uroot -p$PASSWORD -e "GRANT USAGE ON *.* to $DBUSER IDENTIFIED BY '$DBPASSWD'"
-  mysql -uroot -p$PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO $DBUSER"
-  mysql -uroot -p$PASSWORD -e "FLUSH PRIVILEGES"
+    PASSWORD='root'
+    DBHOST=localhost
+    DBNAME=app
+    DBUSER=user
+    DBPASSWD=user
+    debconf-set-selections <<< "mysql-server mysql-server/root_password password $PASSWORD"
+    debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $PASSWORD"
+    apt-get -y install mysql-server
+    apt-get -y install php7.1-mysql
+    mysql -uroot -p$PASSWORD -e "CREATE DATABASE $DBNAME"
+    mysql -uroot -p$PASSWORD -e "CREATE DATABASE northwind"
+    mysql -uroot -p$PASSWORD northwind < /var/www/app/vagrant/northwind.sql
+    mysql -uroot -p$PASSWORD northwind < /var/www/app/vagrant/northwind-data.sql
+    mysql -uroot -p$PASSWORD -e "GRANT USAGE ON *.* to $DBUSER IDENTIFIED BY '$DBPASSWD'"
+    mysql -uroot -p$PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO $DBUSER"
+    mysql -uroot -p$PASSWORD -e "FLUSH PRIVILEGES"
+
+    sed -i "s/.*bind-address.*/\# bind-address = 127.0.0.1/" /etc/mysql/my.cnf
+    sed -i "s/.*skip-external-locking.*/\# skip-external-locking/" /etc/mysql/my.cnf
 
 	service mysql restart
 
 # Fix FQDN error
 # https://help.ubuntu.com/community/ApacheMySQLPHP#Troubleshooting_Apache
-	if [ -d /etc/apache2/conf-available ]; then
-		echo "ServerName localhost" | tee /etc/apache2/conf-available/fqdn.conf
-		a2enconf fqdn
-	else
-		echo "ServerName localhost" | tee /etc/apache2/conf.d/fqdn
-	fi
+    if [ -d /etc/apache2/conf-available ]; then
+    	echo "ServerName localhost" | tee /etc/apache2/conf-available/fqdn.conf
+    	a2enconf fqdn
+    else
+    	echo "ServerName localhost" | tee /etc/apache2/conf.d/fqdn
+    fi
 
 # Create log file
 	touch /var/log/app.log
@@ -119,35 +125,35 @@ apt-get update
 	echo 'xdebug.remote_connect_back=1' >> $PHP_INI
 
 # Install PHP Unit
-  wget https://phar.phpunit.de/phpunit.phar
-  chmod +x phpunit.phar
-  mv phpunit.phar /usr/local/bin/phpunit
+    wget https://phar.phpunit.de/phpunit.phar
+    chmod +x phpunit.phar
+    mv phpunit.phar /usr/local/bin/phpunit
 
 # Add the Drupal environemt vars for all users
-  echo "SITE_ENVIRONMENT='local'" >> /etc/environment
-  echo "DB_NAME='$DBNAME'" >> /etc/environment
-  echo "DB_USER='$DBUSER'" >> /etc/environment
-	echo "DB_PASS='$DBPASSWD'" >> /etc/environment
-	echo "DB_HOST='localhost'" >> /etc/environment
-	echo "DB_PORT='3306'" >> /etc/environment
-	echo "export SITE_ENVIRONMENT=local" >> /etc/apache2/envvars
-	echo "export DB_NAME=$DBNAME" >> /etc/apache2/envvars
-	echo "export DB_USER=$DBUSER" >> /etc/apache2/envvars
-	echo "export DB_PASS=$DBPASSWD" >> /etc/apache2/envvars
-	echo "export DB_HOST=localhost" >> /etc/apache2/envvars
-	echo "export DB_PORT=3306" >> /etc/apache2/envvars
+    echo "SITE_ENVIRONMENT='local'" >> /etc/environment
+    echo "DB_NAME='$DBNAME'" >> /etc/environment
+    echo "DB_USER='$DBUSER'" >> /etc/environment
+    echo "DB_PASS='$DBPASSWD'" >> /etc/environment
+    echo "DB_HOST='localhost'" >> /etc/environment
+    echo "DB_PORT='3306'" >> /etc/environment
+    echo "export SITE_ENVIRONMENT=local" >> /etc/apache2/envvars
+    echo "export DB_NAME=$DBNAME" >> /etc/apache2/envvars
+    echo "export DB_USER=$DBUSER" >> /etc/apache2/envvars
+    echo "export DB_PASS=$DBPASSWD" >> /etc/apache2/envvars
+    echo "export DB_HOST=localhost" >> /etc/apache2/envvars
+    echo "export DB_PORT=3306" >> /etc/apache2/envvars
 
 # Set ipv4 to have priority - to fix possible composer install errors
-  sh -c "echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf"
+    sh -c "echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf"
 
 # Restart apache for changes to take effect
 	service apache2 restart
 
 # Install dependencies
-  cd /var/www/app
-  composer install
-  composer require nltbinh/codeigniter-service-layer
-  php vendor/nltbinh/codeigniter-service-layer/install.php
+    cd /var/www/app
+    composer install
+    composer require nltbinh/codeigniter-service-layer
+    php vendor/nltbinh/codeigniter-service-layer/install.php
 
 echo "*******************************************************"
 echo "MYSQL Info:"
