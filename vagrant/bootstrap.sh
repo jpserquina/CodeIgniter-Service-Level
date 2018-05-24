@@ -143,6 +143,7 @@ apt-get update
 	service apache2 restart
 
 # Install dependencies
+  cd /var/www/app
   composer install
   composer require nltbinh/codeigniter-service-layer
   php vendor/nltbinh/codeigniter-service-layer/install.php

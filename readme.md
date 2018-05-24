@@ -2,7 +2,8 @@
 ## Portfolio demos and sandbox for CI backend
 
 ### Features
-* has its own easy-to-inflate vagrant instance
+* has its own easy-to-deploy vagrant instance
+* allows for xdebug tracing
 * demoes switching between third-party vendor backends purely via config change only - no need to hardcode new methods
 * exposes various helper and template modules for headless CMS
 * uses a service layer in CI for reusable and abstracted methods for business logic and data access
