@@ -10,4 +10,6 @@
 
 ###### * Forked from [jeremyvaught/CodeIgniter-Service-Level](https://github.com/jeremyvaught/CodeIgniter-Service-Level). Original readme.md [here](https://github.com/jeremyvaught/CodeIgniter-Service-Level/blob/master/readme.md)
 ###### * Uses [nltbinh/codeigniter-service-layer](https://github.com/nltbinh/codeigniter-service-layer) via composer.
+###### * Uses the `mywind` Northwind test DB: [dalers/mywind](https://github.com/dalers/mywind)
 ###### * Uses a modified vagrant deploy from [Dave Amatulli](xojins@gmail.com)
+###### * Uses CI 2.2.1 patch: [bcit-ci/CodeIgniter/commit/69b02d0](https://github.com/bcit-ci/CodeIgniter/commit/69b02d0f0bc46e914bed1604cfbd9bf74286b2e3)
